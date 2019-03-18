@@ -1,0 +1,87 @@
+QUESTION 1
+
+DONE ON PAPER
+------------------------------------------------------------------------------------------
+QUESTION 2
+%TODO
+------------------------------------------------------------------------------------------
+QUESTION 3
+
+DONE ON PAPER
+------------------------------------------------------------------------------------------
+QUESTION 4
+%TODO
+syms t lambda
+A=[1 0 2; -3 2 1; -1 3 2];
+B=[4 3 3; -9 -53 -39; 12 75 55];
+I=eye(3);
+
+[vec_a, val_a]=eig(A);
+%vec=[1-i; 1+i; 2], [1+i; 1-i; 2], [-3; -4; 3]
+%val= 3+2i, 3-2i, -1
+[vec_b, val_b]=eig(B);
+%vec=[2; -1; 1], [-1; -2; 3], [-1; -2; 3]
+%val=4, 1, 1
+r1a=inv(val_a(1,1)*I-A);
+r2a=inv(val_a(2,2)*I-A);
+r3a=inv(val_a(3,3)*I-A);
+
+
+r1b=inv(val_b(1,1)*I-B);
+r2b=inv(val_b(2,2)*I-B);
+r3b=inv(val_b(3,3)*I-B);
+
+resol_a=inv(lambda*I-A);
+resol_b=inv(lambda*I-B);
+
+simplify(expm(A*t))
+--------------------------------------------------------------------------------------------------
+QUESTION 5
+
+clear all
+syms t
+k1=3;
+k2=6;
+k3=6;
+m1=3;
+m2=6;
+I2=eye(2);
+I4=eye(4);
+A=[(k1+k2)/m1 -k2/m1; -k2/m2 (k2+k3)/m2]
+
+[vec_a, val_a]=eig(A)
+%vals= 1,4
+%vecs= [1;1], [2; -1]
+B=[0 0 1 0;0 0 0 1;-(k1+k2)/m1 k2/m1 0 0; k2/m2 -(k2+k3)/m2 0 0]
+
+[vec_b, val_b]=eig(B)
+
+z4a=(A-1*I2)/(4-1);
+z1a=(A-4*I2)/(1-4);
+
+phi=((sin(sqrt(1)*t))/sqrt(1))*z1a+(sin(sqrt(4)*t)/sqrt(4))*z4a;
+psi=cos(sqrt(1)*t)*z1a+cos(sqrt(4)*t)*z4a;
+
+col1=phi(:,1);
+should_be_zero_1 = simplify(diff(col1,t, 2)+A*col1)
+col2=phi(:,2);
+should_be_zero_2=simplify(diff(col2, t, 2)+A*col2)
+
+col1_psi=psi(:,1);
+col2_psi=psi(:,2);
+
+should_be_zero_3=simplify(diff(col1_psi,t,2)+A*col1_psi)
+should_be_zero_4=simplify(diff(col2_psi,t,2)+A*col2_psi)
+
+A_diag=vec_a\A*vec_a;
+sqrt_a=vec_a*sqrt(A_diag)/(vec_a)
+sqrt2_a=sqrt_a*-1;
+%all square roots of A include the printed matrix sqrt_a as wel as -1*sqrt_a
+
+isequal(sin(sqrt_a*t)/sqrt_a,sin(sqrt2_a*t)/sqrt2_a)
+isequal(cos(sqrt_a*t), cos(sqrt2_a*t))
+
+%B_diag=(vec_b)\B*vec_b
+%exp_B=vec_b*exp(B_diag*t)/(vec_b)
+
+

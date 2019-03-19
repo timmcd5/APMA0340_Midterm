@@ -1,42 +1,52 @@
-QUESTION 1
-
-DONE ON PAPER
-------------------------------------------------------------------------------------------
-QUESTION 2
+%QUESTION 1
+%DONE ON PAPER
+%------------------------------------------------------------------------------------------
+%QUESTION 2
+%DONE ON PAPER
+%------------------------------------------------------------------------------------------
+%QUESTION 3
+%DONE ON PAPER
+%------------------------------------------------------------------------------------------
+%QUESTION 4
 %TODO
-------------------------------------------------------------------------------------------
-QUESTION 3
-
-DONE ON PAPER
-------------------------------------------------------------------------------------------
-QUESTION 4
-%TODO
+clear all
 syms t lambda
 A=[1 0 2; -3 2 1; -1 3 2];
 B=[4 3 3; -9 -53 -39; 12 75 55];
 I=eye(3);
 
-[vec_a, val_a]=eig(A);
-%vec=[1-i; 1+i; 2], [1+i; 1-i; 2], [-3; -4; 3]
+[vec_a, val_a]=eig(A)
+s=[1-i 1+i -3; 1+i 1-i 4; 2 2 3];
 %val= 3+2i, 3-2i, -1
-[vec_b, val_b]=eig(B);
+[vec_b, val_b]=eig(B)
 %vec=[2; -1; 1], [-1; -2; 3], [-1; -2; 3]
 %val=4, 1, 1
-r1a=inv(val_a(1,1)*I-A);
-r2a=inv(val_a(2,2)*I-A);
-r3a=inv(val_a(3,3)*I-A);
+diag_A=s\A*s;
+exp_a= s*[exp(3*t)*(cos(2*t)+i*sin(2*t)),0,0;0,exp(3*t)*(cos(-2*t)+i*sin(-2*t)),0; 0,0, exp(-1*t)]
+
+resol_b=simplify(inv(I*lambda-B));
+res0=subs(lambda*resol_b, lambda, 0);
+
+ans1=diff((sin(sqrt(lambda)*t)/(sin(sqrt(lambda)))*(lambda-1)^2*resol_b),lambda);
+ans2=diff((cos(sqrt(lambda)*t) * (lambda - 1)^2 *resol_b),lambda);
+
+res_phi_1=subs(ans1, lambda, 1);
+res_psi_1=subs(ans2, lambda, 1);
+
+phi=res0+res_phi_1
+psi=res0+res_psi_1
+
+diff(phi,t,2)+B*phi
+diff(psi,t,2)+B*psi
+
+%part D
+test=expm(sqrtm(B)*i*t);
+test=simplify(real(rewrite(test, 'sincos')))
 
 
-r1b=inv(val_b(1,1)*I-B);
-r2b=inv(val_b(2,2)*I-B);
-r3b=inv(val_b(3,3)*I-B);
-
-resol_a=inv(lambda*I-A);
-resol_b=inv(lambda*I-B);
-
-simplify(expm(A*t))
---------------------------------------------------------------------------------------------------
-QUESTION 5
+isequal(diff(psi,t,2), -B*psi)
+%--------------------------------------------------------------------------------------------------
+%QUESTION 5
 
 clear all
 syms t
@@ -81,7 +91,21 @@ sqrt2_a=sqrt_a*-1;
 isequal(sin(sqrt_a*t)/sqrt_a,sin(sqrt2_a*t)/sqrt2_a)
 isequal(cos(sqrt_a*t), cos(sqrt2_a*t))
 
-%B_diag=(vec_b)\B*vec_b
-%exp_B=vec_b*exp(B_diag*t)/(vec_b)
+B_diag=(vec_b)\B*vec_b
+s=vec_b;
+
+%exp_B=s*[cos(2*t)+i*sin(2*t),0,0,0;0,cos(-2*t)+i*sin(-2*t), 0, 0;0,0,cos(t)+i*sin(t),0;0,0,0,cos(-t)+i*sin(-t)]*inv(s)
+exp_B=expm(B*t);
+col1b=exp_B(:,1);
+col2b=exp_B(:,2);
+col3b=exp_B(:,3);
+col4b=exp_B(:,4);
+
+isequal(diff(col1b,t), B*col1b)
+isequal(diff(col2b,t), B*col2b)
+isequal(diff(col3b,t), B*col3b)
+isequal(diff(col4b,t), B*col4b)
+
+
 
 
